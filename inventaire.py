@@ -62,7 +62,8 @@ for partner in partners:
 
 	print 	partner.id,":",partner.name 
 	filepart.write( "<h1>%s</h1> <ul>" % (partner.name))
-	products = openerp.ProductProduct.browse([('main_seller_id','=',partner.name)])
+
+	products = openerp.ProductProduct.browse([('main_seller_id','=',partner.name),('sale_ok','=','true')])
 	#products = openerp.ProductProduct.browse([])
 	print ">>>> Number of product found: ", len(products)
 	for product in products : 
