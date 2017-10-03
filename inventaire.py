@@ -13,6 +13,12 @@ import erppeek
 from datetime import date
 
 from cfg_secret_configuration import odoo_configuration_user
+try:
+    from config import config_inventaire
+except:
+    config_inventaire = {
+        'output_dir': 'output'
+    }
 
 
 ###############################################################################
@@ -47,9 +53,9 @@ partners = openerp.ResPartner.browse([('supplier','=','true')])
 ## Nb de partner 
 print "Found %d suppliers" % len(partners)
 
-file = open("output/inventaire.html","w") 
+file = open("%s/inventaire.html" %(config_inventaire['output_dir']),"w")
 
-header='<html  xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr" dir="ltr" <head> <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> <style> .text { font-family: times, monospace; font-size:8pt;  } </style></head><body class="text"> '
+header='<html  xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr" dir="ltr" <head> <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> <style> .text { font-family: times, monospace; font-size:12pt;  } </style></head><body class="text"> '
 
 file.write( "%s" %(header))
 
@@ -57,7 +63,7 @@ file.write( "%s" %(header))
 for partner in partners:
 	file.write( "<li><a href='%s.html'>%s</a> %s </li>" % (partner.id,partner.id,partner.name,) )
 
-	filepart = open("output/%s.html" %(partner.id),"w") 
+	filepart = open("%s/%s.html" %(config_inventaire['output_dir'], partner.id),"w")
 	filepart.write( "%s <a href='inventaire.html'>Retour liste</a> " %(header))
 
 	print 	partner.id,":",partner.name 
