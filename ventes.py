@@ -59,6 +59,12 @@ def compute_line(line):
             line.product_id.name, corrected_price, line.qty, line_ttc, line_tva, type_tva)
     return (type_tva, line_ttc, line_tva)
 
+def normalize_payment_mean(mean):
+    if mean.startswith("CB"):
+        return "CB"
+    else:
+        return mean
+
 def main():
     # configure arguments parser
     parser = argparse.ArgumentParser(description='Créé un rapport des ventes')
@@ -99,9 +105,10 @@ def main():
         order_payment = 0.00
         for stmt in order.statement_ids:
             order_payment += stmt.amount
-            if stmt.journal_id.code not in total_payment_mean.keys():
-                total_payment_mean[stmt.journal_id.code] = 0.00
-            total_payment_mean[stmt.journal_id.code] += stmt.amount
+            mean = normalize_payment_mean(stmt.journal_id.code)
+            if mean not in total_payment_mean.keys():
+                total_payment_mean[mean] = 0.00
+            total_payment_mean[mean] += stmt.amount
 
         order_sale_ttc = 0.00
         for line in order.lines:
