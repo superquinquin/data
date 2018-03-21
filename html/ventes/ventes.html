@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html class="page_sommaire ltr fr no-js" xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr" dir="ltr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Ventes des 30 derniers jours</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+    <link rel='stylesheet' href='../css/site.css' type='text/css'/>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="jquery.getUrlParam.js"></script>
+    <script>
+        (function() {
+            var date = $(document).getUrlParam("date");
+            if (! date) {
+                date = moment().subtract(1, 'days').format("YYYY-MM-DD");
+            }
+            var yesterday = moment(date).subtract(1, 'days').format("YYYY-MM-DD");
+            var tomorrow = moment(date).add(1, 'days').format("YYYY-MM-DD");
+            $.getJSON('data/sales_'+date+'.json', function(data) {
+                $('#page').append("<a href=ventes.html?date="+yesterday+">"+yesterday+"</a>");
+                $('#page').append(" - ");
+                $('#page').append("<a href=ventes.html?date="+tomorrow+">"+tomorrow+"</a>");
+                $('#page').append("<h2>Rapport des ventes pour la date du "+data.date+"</h2>");
+                $('#page').append("<br>");
+                var table_total = $('<table></table>');
+                table_total.append('<tr><td>Total articles :</td><td>'+data.total_articles+'</td><>tr>');
+                table_total.append('<tr><td>Total tickets :</td><td>'+data.total_tickets+'</td><>tr>');
+                table_total.append('<tr><td>Total ventes (TTC) :</td><td>'+data.total_sale+' €</td><>tr>');
+                table_total.append('<tr><td>Total paiements :</td><td>'+data.total_payment+' €</td><>tr>');
+                $('#page').append(table_total)
+                $('#page').append("<br><br>");
+                $('#page').append("Detail ventes : ");
+                $('#page').append("<br>");
+                var table_tva = $('<table></table>');
+                table_tva.append("<tr><th></th><th>HT</th><th>TVA</th><th>TTC</th></tr>");
+                $.each(data.sale_by_tva, function(i, tva) {
+                    table_tva.append("<tr><th>"+tva.label+"</th><td>"+tva.ht+" €</td><td>"+tva.tva+" €</td><td>"+tva.ttc+" €</td></tr>");
+                });
+                $('#page').append(table_tva);
+                $('#page').append("<br>");
+                $('#page').append("Detail paiements : ");
+                $('#page').append("<br>");
+                var table_payment = $('<table></table>');
+                $.each(data.payment_by_mean, function(i, payment) {
+                    table_payment.append("<tr><th>"+payment.mean+"</th><td>"+payment.amount+" €</td></tr>");
+                });
+                $('#page').append(table_payment);
+            });
+        })();
+    </script>
+</head>
+<body>
+    <div id="page" class="ventes"></div>
+</body>
+</html>

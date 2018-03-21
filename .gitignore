@@ -1,4 +1,5 @@
 *.pyc
-output/*
 cfg_secret_configuration.py
 config.py
+**/data
+**/inventaire

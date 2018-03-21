@@ -1,0 +1,38 @@
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.logo {
+    width: 120px;
+    height: 120px;
+    height: auto;
+    float: left;
+    margin: 3px;
+    padding: 3px;
+}
+
+.item {
+    width: 200px;
+    height: 200px;
+    height: auto;
+    float: left;
+    margin: 3px;
+    padding: 3px;
+    text-align: center;
+}
+
+.horizontalgap {
+  float: left;
+  overflow: hidden;
+  height: 200px;
+}
+
+th, td {
+    padding: 5px;
+}
+
+.ventes {
+    font-family: sans-serif;
+    font-size: 18px;
+}
